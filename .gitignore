@@ -1,0 +1,13 @@
+# Fichiers d'environnement
+.env
+
+# Dossiers de données Docker
+postgres_data/
+redis_data/
+
+# Fichiers de log
+*.log
+
+# Fichiers de dépendances
+node_modules/
+vendor/
