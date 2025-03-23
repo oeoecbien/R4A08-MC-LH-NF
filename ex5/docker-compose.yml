@@ -1,0 +1,38 @@
+version: '3'
+services:
+  web:
+    image: php:8.1-apache
+    ports:
+      - "8081:80"  # Mappe le port 8081 de l'hôte au port 80 du conteneur
+    volumes:
+      - .:/var/www/html  # Monte le répertoire actuel dans /var/www/html du conteneur
+    networks:
+      - app-network  # Déclare un réseau pour la communication entre les services
+
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Mot de passe root pour la base de données
+      MARIADB_DATABASE: mydb  # Crée une base de données "mydb" lors de la création
+    volumes:
+      - ./database:/var/lib/mysql  # Persistance des données de la base de données
+    networks:
+      - app-network  # Utilise le même réseau pour communiquer avec le service web
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mariadb  # Spécifie que phpMyAdmin doit se connecter au service mariadb
+      PMA_PORT: 3306  # Port par défaut de MariaDB
+    ports:
+      - "8082:80"  # Mappe le port 8082 de l'hôte au port 80 du conteneur
+    networks:
+      - app-network  # Utilise le même réseau pour communiquer avec les autres services
+
+networks:
+  app-network:
+    driver: bridge  # Définit un réseau virtuel pour la communication entre les services
+
+volumes:
+  database:
+    driver: local  # Crée un volume local pour stocker les données de la base de données
