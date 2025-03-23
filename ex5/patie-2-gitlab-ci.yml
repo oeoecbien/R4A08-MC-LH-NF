@@ -1,0 +1,27 @@
+stages:
+  - build
+
+.build-image:
+  script:
+    - docker build --build-arg PHP_VERSION=$PHP_VERSION -t $CI_REGISTRY_IMAGE/ex5:$PHP_VERSION .
+    - docker push $CI_REGISTRY_IMAGE/ex5:$PHP_VERSION
+  only:
+    - master
+
+build-image-8.1:
+  extends:
+    - .build-image
+  variables:
+    PHP_VERSION: '8.1'
+
+build-image-8.2:
+  extends:
+    - .build-image
+  variables:
+    PHP_VERSION: '8.2'
+
+build-image-8.3:
+  extends:
+    - .build-image
+  variables:
+    PHP_VERSION: '8.3'
