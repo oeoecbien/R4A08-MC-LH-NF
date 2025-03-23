@@ -3,8 +3,7 @@ version: '3.8'
 services:
   # Service PHP
   php:
-    build:
-      context: ./docker/php
+    image: oeoecbien/todo-app-php:latest
     volumes:
       - ./src:/var/www/html
     depends_on:
