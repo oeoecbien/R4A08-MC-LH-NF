@@ -1,0 +1,1 @@
+docker run oeoecbien/mon_image_ex2
