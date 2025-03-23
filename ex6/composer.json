@@ -1,0 +1,20 @@
+{
+    "name": "kgaut/docker-test-app",
+    "description": "Application de test",
+    "type": "project",
+    "license": "WTFPL",
+    "autoload": {
+        "psr-4": {
+            "Kgaut\\DockerTestApp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kevin Gautreau"
+        }
+    ],
+    "require": {
+        "predis/predis": "^2.1",
+        "vlucas/phpdotenv": "^5.5"
+    }
+}

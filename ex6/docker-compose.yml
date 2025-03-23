@@ -1,0 +1,65 @@
+version: '3'
+services:
+  web:
+    image: php:8.1-fpm
+    container_name: php-container
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - mariadb
+      - redis
+    working_dir: /var/www/html
+    command: bash -c "composer install && php-fpm"
+  
+  nginx:
+    image: nginx:latest
+    container_name: nginx-container
+    volumes:
+      - ./app:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - web
+    networks:
+      - app-network
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: mariadb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MARIADB_DATABASE: app_db
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-container
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: app_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:
+    driver: local
+  postgres-data:
+    driver: local
