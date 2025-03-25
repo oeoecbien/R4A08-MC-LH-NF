@@ -3,22 +3,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const addTaskButton = document.getElementById('add-task');
     const taskList = document.getElementById('task-list');
 
-    // Charger les tâches au démarrage
     loadTasks();
 
-    // Ajouter une tâche
+    // ajout d'une tâche
     addTaskButton.addEventListener('click', function () {
         addTask();
     });
 
-    // Ajouter une tâche avec la touche Entrée
+    // avec la touche Entrée
     taskInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             addTask();
         }
     });
 
-    // Charger les tâches depuis l'API
+    // charger les tâches depuis l'API
     function loadTasks() {
         fetch('/api/tasks.php')
             .then(response => response.json())
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Erreur lors du chargement des tâches:', error));
     }
 
-    // Ajouter une nouvelle tâche
+    // ajout d'une nouvelle tâche
     function addTask() {
         const title = taskInput.value.trim();
 
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Marquer une tâche comme terminée ou non
+    // marquer une tâche comme terminée ou non
     function toggleTask(id, completed) {
         fetch(`/api/tasks.php?id=${id}`, {
             method: 'PUT',
@@ -66,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Erreur lors de la mise à jour de la tâche:', error));
     }
 
-    // Supprimer une tâche
+    // supprimer une tâche
     function deleteTask(id) {
         fetch(`/api/tasks.php?id=${id}`, {
             method: 'DELETE'
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Erreur lors de la suppression de la tâche:', error));
     }
 
-    // Afficher une tâche dans la liste
+    // afficher une tâche dans la liste
     function renderTask(task) {
         const li = document.createElement('li');
 

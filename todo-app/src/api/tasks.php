@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-// Connexion à la base de données
+// connexion à la base de données
 $dbHost = getenv('DB_HOST');
 $dbPort = getenv('DB_PORT');
 $dbName = getenv('DB_NAME');
@@ -16,33 +16,33 @@ try {
     exit;
 }
 
-// Connexion à Redis pour le cache
+// connexion à Redis pour le cache
 $redisHost = getenv('REDIS_HOST');
 $redisPort = getenv('REDIS_PORT');
 try {
     $redis = new Redis();
     $redis->connect($redisHost, $redisPort);
 } catch (Exception $e) {
-    // En cas d'erreur Redis, on continue sans cache
+    // en cas d'erreur Redis, on continue sans cache
 }
 
-// Déterminer l'action à effectuer
+// déterminer l'action à effectuer
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Vérifier si les données sont en cache
+        // vérifier si les données sont en cache
         $cacheKey = 'tasks';
         if (isset($redis) && $redis->exists($cacheKey)) {
             echo $redis->get($cacheKey);
             exit;
         }
 
-        // Récupérer les tâches depuis la base de données
+        // récupérer les tâches depuis la base de données
         $stmt = $pdo->query("SELECT * FROM tasks ORDER BY created_at DESC");
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Mettre en cache pour 60 secondes
+        // mettre en cache pour 60 secondes
         if (isset($redis)) {
             $redis->setex($cacheKey, 60, json_encode($tasks));
         }
@@ -51,7 +51,7 @@ switch ($method) {
         break;
 
     case 'POST':
-        // Récupérer les données envoyées
+        // récupérer les données envoyées
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!isset($data['title']) || empty(trim($data['title']))) {
@@ -59,12 +59,12 @@ switch ($method) {
             exit;
         }
 
-        // Ajouter la tâche
+        // ajouter la tâche
         $stmt = $pdo->prepare("INSERT INTO tasks (title) VALUES (:title) RETURNING id, title, completed, created_at");
         $stmt->execute(['title' => $data['title']]);
         $task = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Invalider le cache
+        // invalider le cache
         if (isset($redis)) {
             $redis->del('tasks');
         }
@@ -73,7 +73,7 @@ switch ($method) {
         break;
 
     case 'PUT':
-        // Récupérer l'ID et les données
+        // récupérer l'ID et les données
         $id = $_GET['id'] ?? null;
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -82,7 +82,7 @@ switch ($method) {
             exit;
         }
 
-        // Mettre à jour la tâche
+        // mettre à jour la tâche
         $stmt = $pdo->prepare("UPDATE tasks SET completed = :completed WHERE id = :id RETURNING id, title, completed, created_at");
         $stmt->execute([
             'id' => $id,
@@ -90,7 +90,7 @@ switch ($method) {
         ]);
         $task = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Invalider le cache
+        // invalider le cache
         if (isset($redis)) {
             $redis->del('tasks');
         }
@@ -99,7 +99,7 @@ switch ($method) {
         break;
 
     case 'DELETE':
-        // Récupérer l'ID
+        // récupérer l'ID
         $id = $_GET['id'] ?? null;
 
         if (!$id) {
@@ -107,11 +107,11 @@ switch ($method) {
             exit;
         }
 
-        // Supprimer la tâche
+        // supprimer la tâche
         $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id");
         $stmt->execute(['id' => $id]);
 
-        // Invalider le cache
+        // invalider le cache
         if (isset($redis)) {
             $redis->del('tasks');
         }

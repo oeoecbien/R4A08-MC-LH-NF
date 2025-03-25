@@ -1,18 +1,18 @@
 <?php
-// Vérifier la connexion à la base de données
+// vérif la connexion à la base de données
 $dbHost = getenv('DB_HOST');
 $dbPort = getenv('DB_PORT');
 $dbName = getenv('DB_NAME');
 $dbUser = getenv('DB_USER');
 $dbPassword = getenv('DB_PASSWORD');
 
-// Initialisation de la connexion
+// connexion
 try {
     $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName;";
     $pdo = new PDO($dsn, $dbUser, $dbPassword, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     $dbStatus = "Connecté à la base de données PostgreSQL";
 
-    // Création de la table si elle n'existe pas
+    // création de la table si elle n'existe pas
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS tasks (
             id SERIAL PRIMARY KEY,
@@ -25,7 +25,7 @@ try {
     $dbStatus = "Erreur de connexion à la base de données: " . $e->getMessage();
 }
 
-// Vérifier la connexion à Redis
+// vérifier la connexion à Redis
 $redisHost = getenv('REDIS_HOST');
 $redisPort = getenv('REDIS_PORT');
 try {
@@ -63,7 +63,6 @@ try {
             </div>
 
             <ul id="task-list">
-                <!-- Les tâches seront chargées ici par JavaScript -->
             </ul>
         </div>
     </div>

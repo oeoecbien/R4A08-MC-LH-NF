@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Service PHP
   php:
     image: oeoecbien/todo-app-php:latest
     volumes:
@@ -18,7 +17,6 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
-  # Service Nginx
   nginx:
     image: nginx:alpine
     ports:
@@ -29,7 +27,6 @@ services:
     depends_on:
       - php
 
-  # Service PostgreSQL
   postgres:
     image: postgres:latest
     environment:
@@ -41,7 +38,6 @@ services:
     ports:
       - "5432:5432"
 
-  # Service Redis pour le cache
   redis:
     image: redis:alpine
     ports:
