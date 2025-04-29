@@ -9,23 +9,12 @@ Cette application de todo list utilise Docker pour créer un environnement de d�
 
 ## Installation
 
-1. Clonez ce dépôt :
-   ```
-   git clone https://github.com/username/todo-app-docker.git
-   cd todo-app
-   ```
-
-2. Créez le fichier `.env` à partir du modèle :
-   ```
-   cp .env.example .env
-   ```
-
-3. Démarrez les conteneurs Docker :
+1. Démarrez les conteneurs Docker :
    ```
    docker compose up -d
    ```
 
-4. Accédez à l'application dans votre navigateur :
+2. Accédez à l'application dans votre navigateur :
    ```
    http://localhost:8080
    ```
