@@ -1,6 +1,6 @@
 # Todo List - Application Docker
 
-Cette application de todo list utilise Docker pour créer un environnement de développement complet avec PHP, PostgreSQL, Nginx et Redis.
+Cette application de todo list utilise Docker et GitHub Actions.
 
 ## Prérequis
 
